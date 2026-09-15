@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Watermark Tool</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Watermark Tool</h1>
+    <p>Laad twee watermerken, upload je foto&apos;s en download ze met automatisch het juiste watermerk.</p>
+  </header>
+
+  <section class="card">
+    <h2>1. Watermerken</h2>
+    <div class="drop-row">
+      <label class="drop" id="wm-v-label">
+        <input type="file" id="wm-v" accept="image/*" hidden>
+        <span class="drop-title">Verticaal watermerk</span>
+        <span class="drop-sub">voor verticale foto&apos;s</span>
+        <img id="wm-v-preview" alt="">
+      </label>
+      <label class="drop" id="wm-h-label">
+        <input type="file" id="wm-h" accept="image/*" hidden>
+        <span class="drop-title">Horizontaal watermerk</span>
+        <span class="drop-sub">voor horizontale foto&apos;s</span>
+        <img id="wm-h-preview" alt="">
+      </label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Foto&apos;s</h2>
+    <div class="drop-row">
+      <label class="drop">
+        <input type="file" id="photos" accept="image/*" multiple hidden>
+        <span class="drop-title">Foto&apos;s selecteren</span>
+        <span class="drop-sub">enkel of meerdere tegelijk</span>
+      </label>
+      <label class="drop folder-only" id="folder-label">
+        <input type="file" id="folder" webkitdirectory multiple hidden>
+        <span class="drop-title">Hele map selecteren</span>
+        <span class="drop-sub">alleen op laptop / desktop</span>
+      </label>
+    </div>
+    <div id="status" class="status"></div>
+    <div id="list"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Instellingen</h2>
+    <label class="row">
+      <span>Grootte watermerk: <b id="size-val">25%</b></span>
+      <input type="range" id="size" min="5" max="80" value="25">
+    </label>
+    <label class="row">
+      <span>Doorzichtigheid: <b id="opacity-val">80%</b></span>
+      <input type="range" id="opacity" min="10" max="100" value="80">
+    </label>
+    <div class="row">
+      <span>Positie:</span>
+      <div class="pos-btns" id="pos-btns">
+        <button type="button" data-pos="topleft">Links boven</button>
+        <button type="button" data-pos="top">Boven</button>
+        <button type="button" data-pos="topright">Rechts boven</button>
+        <button type="button" data-pos="left">Links</button>
+        <button type="button" data-pos="center" class="active">Midden</button>
+        <button type="button" data-pos="right">Rechts</button>
+        <button type="button" data-pos="bottomleft">Links onder</button>
+        <button type="button" data-pos="bottom">Onder</button>
+        <button type="button" data-pos="bottomright">Rechts onder</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>4. Downloaden</h2>
+    <div class="download-row">
+      <button id="download-all" disabled>Alles downloaden (.zip)</button>
+      <button id="reset" class="ghost" type="button">Opnieuw beginnen</button>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
