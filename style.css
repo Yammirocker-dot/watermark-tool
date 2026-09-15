@@ -122,6 +122,12 @@ header p {
   color: var(--muted);
 }
 
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 12px 0 0;
+}
+
 #list {
   margin-top: 10px;
   display: grid;

@@ -52,23 +52,37 @@
     loadWatermark(e.target.files[0], false);
   });
 
+  function setStatus(msg) {
+    statusEl.textContent = msg;
+  }
+
   function addFiles(fileList) {
-    var files = Array.prototype.filter.call(fileList, function (f) {
-      return f.type.indexOf('image/') === 0;
-    });
+    var files = Array.prototype.slice.call(fileList);
+    if (!files.length) {
+      setStatus('Geen bestanden geselecteerd.');
+      return;
+    }
+    var failed = 0;
     files.forEach(function (file) {
       var url = URL.createObjectURL(file);
       var img = new Image();
       var item = { file: file, img: img, url: url, orientation: null };
       items.push(item);
       img.onload = function () {
+        URL.revokeObjectURL(url);
         item.orientation = img.naturalWidth >= img.naturalHeight ? 'h' : 'v';
         renderAll();
       };
       img.onerror = function () {
+        URL.revokeObjectURL(url);
+        failed++;
         var i = items.indexOf(item);
         if (i !== -1) items.splice(i, 1);
         renderAll();
+        setStatus(
+          '1 of meer bestanden zijn niet als afbeelding te lezen (vaak iPhone-HEIC op de pc). ' +
+          'Zet die eerst om naar JPG of PNG en probeer opnieuw. Op de iPhone zelf werkt uploaden wel.'
+        );
       };
       img.src = url;
     });
@@ -142,7 +156,7 @@
 
       listEl.appendChild(el);
     });
-    statusEl.textContent = items.length + (items.length === 1 ? ' foto geselecteerd' : ' foto\'s geselecteerd');
+    setStatus(items.length + (items.length === 1 ? ' foto geselecteerd' : ' foto\'s geselecteerd'));
     var ready =
       items.length > 0 &&
       wmVertical && wmHorizontal &&
