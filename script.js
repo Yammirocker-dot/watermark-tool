@@ -250,14 +250,9 @@
       if (wm.box) {
         dw = wm.box.w * s;
         dh = wm.box.h * s;
-        if (item.orientation === 'h') {
-          var m = h * 0.015;
-          dx = w - dw - m;
-          dy = h - dh - m;
-        } else {
-          dx = w - dw - (fw - (wm.box.x + wm.box.w)) * s;
-          dy = h - dh - (fh - (wm.box.y + wm.box.h)) * s;
-        }
+        var m = h * 0.015;
+        dx = w - dw - m;
+        dy = h - dh - m;
         ctx.drawImage(wm.img, wm.box.x, wm.box.y, wm.box.w, wm.box.h, dx, dy, dw, dh);
       } else {
         dw = fw * s;
