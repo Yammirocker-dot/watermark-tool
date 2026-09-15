@@ -235,6 +235,70 @@ button.small {
   }
 }
 
+.lock {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lock[hidden] {
+  display: none;
+}
+
+.lock-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 22px;
+  width: min(380px, 100%);
+  text-align: center;
+}
+
+.lock-card h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.lock-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#lock-input {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 3px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0d1013;
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+#lock-input:focus {
+  outline: 2px solid var(--accent-border);
+}
+
+#lock-btn {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.error {
+  margin-top: 12px;
+  color: #f2a1a1;
+  font-size: 14px;
+}
+
 button {
   font-family: inherit;
   font-size: 16px;

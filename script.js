@@ -1,4 +1,5 @@
 (function () {
+  function startApp() {
   var wmV = document.getElementById('wm-v');
   var wmH = document.getElementById('wm-h');
   var wmVLabel = document.getElementById('wm-v-label');
@@ -378,4 +379,95 @@
 
   loadOneWM('v', true);
   loadOneWM('h', false);
+  }
+
+  var auth = null;
+  var lockEl = document.getElementById('lock');
+  var lockInput = document.getElementById('lock-input');
+  var lockBtn = document.getElementById('lock-btn');
+  var lockError = document.getElementById('lock-error');
+
+  function hexToBytes(hex) {
+    var out = new Uint8Array(hex.length / 2);
+    for (var i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return out;
+  }
+
+  function bytesToHex(buf) {
+    var b = new Uint8Array(buf);
+    var s = '';
+    for (var i = 0; i < b.length; i++) s += ('0' + b[i].toString(16)).slice(-2);
+    return s;
+  }
+
+  function deriveKey(password, cfg) {
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits'])
+      .then(function (key) {
+        return crypto.subtle.deriveBits(
+          { name: 'PBKDF2', hash: 'SHA-256', salt: hexToBytes(cfg.salt), iterations: cfg.iterations },
+          key,
+          256
+        );
+      })
+      .then(bytesToHex);
+  }
+
+  function tryUnlock() {
+    var pass = lockInput.value;
+    if (!pass || !auth) return;
+    lockError.hidden = true;
+    deriveKey(pass, auth)
+      .then(function (hex) {
+        if (hex === auth.hash) {
+          try { localStorage.setItem('wm-key', auth.hash); } catch (e) {}
+          lockEl.hidden = true;
+          startApp();
+        } else {
+          lockError.hidden = false;
+          lockInput.value = '';
+          lockInput.focus();
+        }
+      })
+      .catch(function () {
+        lockError.hidden = false;
+      });
+  }
+
+  lockBtn.addEventListener('click', tryUnlock);
+  lockInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') tryUnlock();
+  });
+
+  function noLock() {
+    lockEl.hidden = true;
+    startApp();
+  }
+
+  fetch('auth.json', { cache: 'no-cache' })
+    .then(function (res) {
+      return res.ok ? res.json() : null;
+    })
+    .catch(function () {
+      return null;
+    })
+    .then(function (cfg) {
+      if (!cfg) {
+        noLock();
+        return;
+      }
+      if (!window.crypto || !crypto.subtle) {
+        noLock();
+        return;
+      }
+      auth = cfg;
+      var saved = null;
+      try { saved = localStorage.getItem('wm-key'); } catch (e) {}
+      if (saved === cfg.hash) {
+        lockEl.hidden = true;
+        startApp();
+        return;
+      }
+      lockInput.focus();
+    });
 })();

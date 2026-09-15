@@ -4,9 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Watermark Tool</title>
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
+<div id="lock" class="lock">
+  <div class="lock-card">
+    <h2>Watermark Tool</h2>
+    <p>Voer je toegangscode in om verder te gaan.</p>
+    <input type="password" id="lock-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Toegangscode">
+    <button type="button" id="lock-btn">Ontgrendelen</button>
+    <p id="lock-error" class="error" hidden>Foute code. Probeer opnieuw.</p>
+  </div>
+</div>
 <main>
   <header>
     <h1>Watermark Tool</h1>
@@ -69,6 +78,6 @@
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="script.js?v=6"></script>
+<script src="script.js?v=8"></script>
 </body>
 </html>
