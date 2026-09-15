@@ -48,33 +48,30 @@
     });
   }
 
-  function saveWM(file, key) {
-    openDB().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction('watermarks', 'readwrite');
-        tx.objectStore('watermarks').put(file, key);
-        tx.oncomplete = function () { db.close(); resolve(); };
-        tx.onerror = function () { db.close(); reject(tx.error); };
+  var DEFAULT_WM = { v: 'wm-v.png', h: 'wm-h.png' };
+
+  function saveWM(blob, key) {
+    blob.arrayBuffer()
+      .then(function (buf) {
+        return openDB().then(function (db) {
+          return new Promise(function (resolve, reject) {
+            var tx = db.transaction('watermarks', 'readwrite');
+            tx.objectStore('watermarks').put(buf, key);
+            tx.oncomplete = function () { db.close(); resolve(); };
+            tx.onerror = function () { db.close(); reject(tx.error); };
+          });
+        });
+      })
+      .then(function () {
+        var el = key === 'v' ? wmVSaved : wmHSaved;
+        if (el) el.hidden = false;
+      })
+      .catch(function (err) {
+        console.error('watermark opslaan mislukt', err);
       });
-    }).catch(function () {});
   }
 
-  function loadSavedWM() {
-    openDB().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction('watermarks', 'readonly');
-        var rv = tx.objectStore('watermarks').get('v');
-        var rh = tx.objectStore('watermarks').get('h');
-        tx.oncomplete = function () { db.close(); resolve({ v: rv.result, h: rh.result }); };
-        tx.onerror = function () { db.close(); reject(tx.error); };
-      });
-    }).then(function (saved) {
-      if (saved.v) attachWatermark(saved.v, true);
-      if (saved.h) attachWatermark(saved.h, false);
-    }).catch(function () {});
-  }
-
-  function attachWatermark(source, isVertical) {
+  function attachWatermark(source, isVertical, saved) {
     var url = URL.createObjectURL(source);
     var img = new Image();
     img.onload = function () {
@@ -87,25 +84,60 @@
       var savedEl = isVertical ? wmVSaved : wmHSaved;
       label.classList.add('has-file');
       label.querySelector('img').src = url;
-      if (savedEl) savedEl.hidden = false;
+      if (savedEl) savedEl.hidden = !saved;
       renderAll();
     };
     img.src = url;
   }
 
-  function bindWatermarkInput(input, isVertical) {
+  function bindWatermarkInput(input, isVertical, key) {
     input.addEventListener('change', function (e) {
       var f = e.target.files[0];
       if (f) {
-        attachWatermark(f, isVertical);
-        saveWM(f, isVertical ? 'v' : 'h');
+        attachWatermark(f, isVertical, true);
+        saveWM(f, key);
       }
       input.value = '';
     });
   }
 
-  bindWatermarkInput(wmV, true);
-  bindWatermarkInput(wmH, false);
+  function loadDefaultWM(isVertical) {
+    var key = isVertical ? 'v' : 'h';
+    fetch(DEFAULT_WM[key], { cache: 'no-cache' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('niet gevonden');
+        return res.blob();
+      })
+      .then(function (blob) {
+        attachWatermark(blob, isVertical, false);
+      })
+      .catch(function () {});
+  }
+
+  function loadOneWM(key, isVertical) {
+    openDB()
+      .then(function (db) {
+        return new Promise(function (resolve, reject) {
+          var tx = db.transaction('watermarks', 'readonly');
+          var r = tx.objectStore('watermarks').get(key);
+          tx.oncomplete = function () { db.close(); resolve(r.result); };
+          tx.onerror = function () { db.close(); reject(tx.error); };
+        });
+      })
+      .then(function (buf) {
+        if (buf) {
+          attachWatermark(new Blob([buf], { type: 'image/png' }), isVertical, true);
+        } else {
+          loadDefaultWM(isVertical);
+        }
+      })
+      .catch(function () {
+        loadDefaultWM(isVertical);
+      });
+  }
+
+  bindWatermarkInput(wmV, true, 'v');
+  bindWatermarkInput(wmH, false, 'h');
   wmVChange.addEventListener('click', function () { wmV.click(); });
   wmHChange.addEventListener('click', function () { wmH.click(); });
 
@@ -300,5 +332,6 @@
     renderAll();
   });
 
-  loadSavedWM();
+  loadOneWM('v', true);
+  loadOneWM('h', false);
 })();
