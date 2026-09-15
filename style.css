@@ -1,11 +1,14 @@
 :root {
-  --bg: #f4f5f7;
-  --card: #ffffff;
-  --text: #1c2333;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-  --border: #e5e7eb;
+  color-scheme: dark;
+  --bg: #111418;
+  --card: #191e24;
+  --text: #e6e9ee;
+  --muted: #9aa3af;
+  --accent: #1c341f;
+  --accent-hover: #2b4a30;
+  --accent-soft: #9ec9a6;
+  --accent-border: #33523a;
+  --border: #262c35;
   --radius: 14px;
 }
 
@@ -53,7 +56,7 @@ header p {
   border-radius: var(--radius);
   padding: 18px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .card h2 {
@@ -78,7 +81,7 @@ header p {
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-soft);
 }
 
 button.small {
@@ -109,10 +112,14 @@ button.small {
 }
 
 .drop:hover,
-.drop:active,
+.drop:active {
+  border-color: var(--accent-border);
+  background: rgba(28, 52, 31, 0.3);
+}
+
 .drop.has-file {
-  border-color: var(--accent);
-  background: #eff6ff;
+  border-color: var(--accent-soft);
+  background: rgba(28, 52, 31, 0.45);
 }
 
 .drop-title {
@@ -170,7 +177,7 @@ button.small {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px;
-  background: #fafbfc;
+  background: #14181e;
 }
 
 .thumb {
@@ -178,7 +185,7 @@ button.small {
   height: 88px;
   object-fit: contain;
   border-radius: 8px;
-  background: #fff;
+  background: #0d1013;
   border: 1px solid var(--border);
 }
 
@@ -205,11 +212,11 @@ button.small {
 }
 
 .badge.v {
-  background: #9333ea;
+  background: #b06bff;
 }
 
 .badge.h {
-  background: #0d9488;
+  background: #12aa9c;
 }
 
 .item button {
@@ -234,30 +241,30 @@ button {
   font-weight: 600;
   padding: 14px 18px;
   border-radius: 12px;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--accent-border);
   background: var(--accent);
   color: #fff;
   cursor: pointer;
   min-height: 48px;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 button:hover {
-  background: var(--accent-dark);
+  background: var(--accent-hover);
 }
 
 button:disabled {
-  background: #c7cbd4;
-  border-color: #c7cbd4;
-  color: #f6f7f9;
+  background: #262c33;
+  border-color: #262c33;
+  color: #5b6572;
   cursor: not-allowed;
 }
 
 button.ghost {
-  background: #fff;
-  color: var(--accent);
+  background: transparent;
+  color: var(--accent-soft);
 }
 
 button.ghost:hover {
-  background: #eff6ff;
+  background: rgba(28, 52, 31, 0.35);
 }
