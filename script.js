@@ -178,7 +178,9 @@
     ctx.drawImage(img, 0, 0, w, h);
     var wm = item.orientation === 'v' ? wmVertical : wmHorizontal;
     if (wm) {
-      ctx.drawImage(wm, 0, 0, w, h);
+      var wmW = wm.naturalWidth * scale;
+      var wmH = wm.naturalHeight * scale;
+      ctx.drawImage(wm, w - wmW, h - wmH, wmW, wmH);
     }
     return cv;
   }
