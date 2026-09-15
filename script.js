@@ -252,7 +252,7 @@
         dh = wm.box.h * s;
         dx = w - dw - (fw - (wm.box.x + wm.box.w)) * s;
         dy = h - dh - (fh - (wm.box.y + wm.box.h)) * s;
-        if (item.orientation === 'h') dy -= h * 0.015;
+        if (item.orientation === 'h') dy -= h * 0.1;
         ctx.drawImage(wm.img, wm.box.x, wm.box.y, wm.box.w, wm.box.h, dx, dy, dw, dh);
       } else {
         dw = fw * s;
