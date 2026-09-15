@@ -67,6 +67,27 @@ header p {
   gap: 12px;
 }
 
+.drop-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.saved {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+button.small {
+  padding: 10px 12px;
+  font-size: 14px;
+  min-height: 44px;
+  width: 100%;
+}
+
 @media (min-width: 640px) {
   .drop-row {
     grid-template-columns: 1fr 1fr;

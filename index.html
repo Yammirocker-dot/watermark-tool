@@ -16,28 +16,36 @@
   <section class="card">
     <h2>1. Watermerken</h2>
     <div class="drop-row">
-      <label class="drop" id="wm-v-label">
-        <input type="file" id="wm-v" accept="image/*" hidden>
-        <span class="drop-title">Verticaal watermerk</span>
-        <span class="drop-sub">voor verticale foto&apos;s</span>
-        <img id="wm-v-preview" alt="">
-      </label>
-      <label class="drop" id="wm-h-label">
-        <input type="file" id="wm-h" accept="image/*" hidden>
-        <span class="drop-title">Horizontaal watermerk</span>
-        <span class="drop-sub">voor horizontale foto&apos;s</span>
-        <img id="wm-h-preview" alt="">
-      </label>
+      <div class="drop-col">
+        <label class="drop" id="wm-v-label">
+          <input type="file" id="wm-v" accept="image/*" hidden>
+          <span class="drop-title">Verticaal watermerk</span>
+          <span class="drop-sub">voor verticale foto&apos;s</span>
+          <img id="wm-v-preview" alt="">
+        </label>
+        <span class="saved" id="wm-v-saved" hidden>Opgeslagen op dit apparaat</span>
+        <button type="button" class="ghost small" id="wm-v-change">Watermerk wijzigen</button>
+      </div>
+      <div class="drop-col">
+        <label class="drop" id="wm-h-label">
+          <input type="file" id="wm-h" accept="image/*" hidden>
+          <span class="drop-title">Horizontaal watermerk</span>
+          <span class="drop-sub">voor horizontale foto&apos;s</span>
+          <img id="wm-h-preview" alt="">
+        </label>
+        <span class="saved" id="wm-h-saved" hidden>Opgeslagen op dit apparaat</span>
+        <button type="button" class="ghost small" id="wm-h-change">Watermerk wijzigen</button>
+      </div>
     </div>
   </section>
 
   <section class="card">
     <h2>2. Foto&apos;s</h2>
     <div class="drop-row">
-      <label class="drop">
+      <label class="drop" id="photo-drop">
         <input type="file" id="photos" accept="image/*" multiple hidden>
         <span class="drop-title">Foto&apos;s selecteren</span>
-        <span class="drop-sub">enkel of meerdere tegelijk</span>
+        <span class="drop-sub">enkel of meerdere tegelijk, of sleep ze hierheen</span>
       </label>
       <label class="drop folder-only" id="folder-label">
         <input type="file" id="folder" webkitdirectory multiple hidden>
