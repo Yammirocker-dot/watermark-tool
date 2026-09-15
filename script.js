@@ -71,14 +71,46 @@
       });
   }
 
+  function analyzeWM(img) {
+    var w = img.naturalWidth;
+    var h = img.naturalHeight;
+    var cv = document.createElement('canvas');
+    cv.width = w;
+    cv.height = h;
+    var ctx = cv.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var data;
+    try {
+      data = ctx.getImageData(0, 0, w, h).data;
+    } catch (e) {
+      return null;
+    }
+    var minX = w, minY = h, maxX = -1, maxY = -1;
+    for (var y = 0; y < h; y++) {
+      var row = y * w * 4;
+      for (var x = 0; x < w; x++) {
+        if (data[row + x * 4 + 3] > 0) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX === -1) return null;
+    return { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
+  }
+
   function attachWatermark(source, isVertical, saved) {
     var url = URL.createObjectURL(source);
     var img = new Image();
     img.onload = function () {
+      var box = analyzeWM(img);
+      var wmo = { img: img, box: box };
       if (isVertical) {
-        wmVertical = img;
+        wmVertical = wmo;
       } else {
-        wmHorizontal = img;
+        wmHorizontal = wmo;
       }
       var label = isVertical ? wmVLabel : wmHLabel;
       var savedEl = isVertical ? wmVSaved : wmHSaved;
@@ -210,9 +242,21 @@
     ctx.drawImage(img, 0, 0, w, h);
     var wm = item.orientation === 'v' ? wmVertical : wmHorizontal;
     if (wm) {
-      var wmW = wm.naturalWidth * scale;
-      var wmH = wm.naturalHeight * scale;
-      ctx.drawImage(wm, w - wmW, h - wmH, wmW, wmH);
+      var fw = wm.img.naturalWidth;
+      var fh = wm.img.naturalHeight;
+      var s = Math.min(w / fw, h / fh);
+      var dw, dh, dx, dy;
+      if (wm.box) {
+        dw = wm.box.w * s;
+        dh = wm.box.h * s;
+        dx = w - dw - (fw - (wm.box.x + wm.box.w)) * s;
+        dy = h - dh - (fh - (wm.box.y + wm.box.h)) * s;
+        ctx.drawImage(wm.img, wm.box.x, wm.box.y, wm.box.w, wm.box.h, dx, dy, dw, dh);
+      } else {
+        dw = fw * s;
+        dh = fh * s;
+        ctx.drawImage(wm.img, w - dw, h - dh, dw, dh);
+      }
     }
     return cv;
   }
