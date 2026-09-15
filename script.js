@@ -7,18 +7,12 @@
   var folderInput = document.getElementById('folder');
   var listEl = document.getElementById('list');
   var statusEl = document.getElementById('status');
-  var sizeEl = document.getElementById('size');
-  var sizeValEl = document.getElementById('size-val');
-  var opacityEl = document.getElementById('opacity');
-  var opacityValEl = document.getElementById('opacity-val');
-  var posBtns = document.getElementById('pos-btns');
   var downloadAllBtn = document.getElementById('download-all');
   var resetBtn = document.getElementById('reset');
 
   var wmVertical = null;
   var wmHorizontal = null;
   var items = [];
-  var position = 'center';
 
   var isMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (isMobile) {
@@ -89,25 +83,6 @@
     e.target.value = '';
   });
 
-  sizeEl.addEventListener('input', function () {
-    sizeValEl.textContent = sizeEl.value + '%';
-    renderAll();
-  });
-  opacityEl.addEventListener('input', function () {
-    opacityValEl.textContent = opacityEl.value + '%';
-    renderAll();
-  });
-
-  posBtns.addEventListener('click', function (e) {
-    var btn = e.target.closest('button[data-pos]');
-    if (!btn) return;
-    position = btn.getAttribute('data-pos');
-    Array.prototype.forEach.call(posBtns.querySelectorAll('button'), function (b) {
-      b.classList.toggle('active', b === btn);
-    });
-    renderAll();
-  });
-
   function buildCanvas(item, forPreview) {
     var img = item.img;
     var scale = forPreview
@@ -122,26 +97,7 @@
     ctx.drawImage(img, 0, 0, w, h);
     var wm = item.orientation === 'v' ? wmVertical : wmHorizontal;
     if (wm) {
-      var pct = sizeEl.value / 100;
-      var wmW = w * pct;
-      var wmH = wmW * (wm.naturalHeight / wm.naturalWidth);
-      var margin = w * 0.04;
-      var x = 0;
-      var y = 0;
-      switch (position) {
-        case 'topleft': x = margin; y = margin; break;
-        case 'top': x = (w - wmW) / 2; y = margin; break;
-        case 'topright': x = w - wmW - margin; y = margin; break;
-        case 'left': x = margin; y = (h - wmH) / 2; break;
-        case 'right': x = w - wmW - margin; y = (h - wmH) / 2; break;
-        case 'bottomleft': x = margin; y = h - wmH - margin; break;
-        case 'bottom': x = (w - wmW) / 2; y = h - wmH - margin; break;
-        case 'bottomright': x = w - wmW - margin; y = h - wmH - margin; break;
-        default: x = (w - wmW) / 2; y = (h - wmH) / 2;
-      }
-      ctx.globalAlpha = opacityEl.value / 100;
-      ctx.drawImage(wm, x, y, wmW, wmH);
-      ctx.globalAlpha = 1;
+      ctx.drawImage(wm, 0, 0, w, h);
     }
     return cv;
   }

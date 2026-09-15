@@ -189,48 +189,6 @@ header p {
   grid-column: 1 / -1;
 }
 
-.row {
-  display: block;
-  margin-bottom: 14px;
-  font-size: 14px;
-}
-
-.row:last-child {
-  margin-bottom: 0;
-}
-
-.row span {
-  display: block;
-  margin-bottom: 8px;
-}
-
-input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-  height: 32px;
-}
-
-.pos-btns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.pos-btns button {
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 10px 4px;
-  border-radius: 10px;
-  font-size: 13px;
-  color: var(--text);
-}
-
-.pos-btns button.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-
 .download-row {
   display: flex;
   flex-direction: column;
